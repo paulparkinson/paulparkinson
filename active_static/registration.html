@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XRCloud Services</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <style>
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        #formContainer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            background-color: white;
+            padding: 20px;
+            border: 1px solid black;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="formContainer">
+    <form action="/register" method="post">
+        <label for="firstname">Register for free...</label><br><br>
+        <label for="firstname">First name:</label>
+        <input type="text" id="firstname" name="firstname" required><br>
+        <label for="lastname">Last name:</label>
+        <input type="text" id="lastname" name="lastname" required><br>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"    minlength="8" required><br>
+        <label for="passwordconfirm">Confirm Password:</label>
+        <input type="password" id="passwordconfirm" name="passwordconfirm"   minlength="8" required><br>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+<canvas id="renderCanvas"></canvas>
+
+<script>
+        // Babylon.js code
+        const canvas = document.getElementById("renderCanvas");
+        const engine = new BABYLON.Engine(canvas, true);
+
+        const createScene = () => {
+            const scene = new BABYLON.Scene(engine);
+
+<!--            const box = BABYLON.MeshBuilder.CreateBox("box", { size: document.getElementById("cubeSize").value }, scene);-->
+            const box = BABYLON.MeshBuilder.CreateBox("box", { size: 3 }, scene);
+            box.position.y = 1;
+            box.position.x = 4;
+            box.rotation.x = BABYLON.Tools.ToRadians(45);
+<!--            const box2 = BABYLON.MeshBuilder.CreateBox("box", { size: 2 }, scene);-->
+<!--            box2.position.y = -2;-->
+<!--            box2.position.x = 8;-->
+<!--            box2.rotation.x = BABYLON.Tools.ToRadians(90);-->
+<!--            const box3 = BABYLON.MeshBuilder.CreateBox("box", { size: 3 }, scene);-->
+<!--            box3.position.y = 3;-->
+<!--            box3.position.x = -4;-->
+<!--            box3.rotation.x = BABYLON.Tools.ToRadians(74);-->
+<!--            box3.rotation.y = BABYLON.Tools.ToRadians(74);-->
+
+
+            const text = "Click me to go to Google!";
+            const texture = new BABYLON.DynamicTexture("dynamicTexture", { width: 1, height: 1 }, scene);
+<!--            const texture = new BABYLON.DynamicTexture("dynamicTexture", { width: 256, height: 256 }, scene);-->
+            const ctx = texture.getContext();
+            ctx.font = "24px Arial";
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.fillText(text, 128, 128);
+            box.material = new BABYLON.StandardMaterial("material", scene);
+<!--            box.material.diffuseTexture = texture;-->
+
+            // Set up the clickable link
+            box.actionManager = new BABYLON.ActionManager(scene);
+            box.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction(
+                    BABYLON.ActionManager.OnLeftPickTrigger,
+                    () => {
+                        window.location.href = "servicesoffered.html";
+                    }
+                )
+            );
+<!--            canvas.addEventListener("click", () => {-->
+<!--                window.location.href = "https://www.google.com";-->
+<!--            });-->
+
+            const camera = new BABYLON.FreeCamera("camera", new BABYLON.Vector3(0, 5, -10), scene);
+            camera.setTarget(new BABYLON.Vector3(0, 0, 0));
+            camera.attachControl(canvas, true);
+
+            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+            light.intensity = 0.7;
+
+            return scene;
+        };
+
+        const scene = createScene();
+
+        engine.runRenderLoop(() => {
+            scene.render();
+        });
+
+        window.addEventListener("resize", () => {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>

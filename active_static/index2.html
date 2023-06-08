@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Babylon.js Clickable Cube Example</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <style>
+        html,
+        body,
+        #renderCanvas {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<canvas id="renderCanvas"></canvas>
+
+<script>
+        // Babylon.js code
+        const canvas = document.getElementById("renderCanvas");
+        const engine = new BABYLON.Engine(canvas, true);
+
+        const createScene = () => {
+            const scene = new BABYLON.Scene(engine);
+
+            // Add a cube to the scene
+            const cube = BABYLON.MeshBuilder.CreateBox("cube", { size: 1 }, scene);
+
+            // Add text to the cube
+            const text = "Click me to go to Google!";
+            const texture = new BABYLON.DynamicTexture("dynamicTexture", { width: 256, height: 256 }, scene);
+            const ctx = texture.getContext();
+            ctx.font = "24px Arial";
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.fillText(text, 128, 128);
+<!--            cube.material = new BABYLON.StandardMaterial("material", scene);-->
+<!--            cube.material.diffuseTexture = texture;-->
+
+            // Set up the clickable link
+            cube.actionManager = new BABYLON.ActionManager(scene);
+            cube.actionManager.registerAction(
+                new BABYLON.ExecuteCodeAction(
+                    BABYLON.ActionManager.OnLeftPickTrigger,
+                    () => {
+                        window.location.href = "https://www.google.com";
+                    }
+                )
+            );
+
+            return scene;
+        };
+
+        const scene = createScene();
+
+        engine.runRenderLoop(() => {
+            scene.render();
+        });
+
+        window.addEventListener("resize", () => {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>
